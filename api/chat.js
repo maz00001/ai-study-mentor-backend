@@ -1,10 +1,9 @@
 export default async function handler(req, res) {
   try {
-
-    const question = req.body?.question || "Explain Artificial Intelligence simply.";
+    const { question } = req.body || { question: "Explain Artificial Intelligence simply." };
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: {
@@ -13,9 +12,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           contents: [
             {
-              parts: [
-                { text: question }
-              ]
+              parts: [{ text: question }]
             }
           ]
         })
@@ -23,18 +20,17 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
-console.log("FULL GEMINI RESPONSE:", JSON.stringify(data, null, 2));
+
+    // 🔍 Debug (important)
+    console.log(data);
 
     const answer =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "AI could not generate a response.";
+      JSON.stringify(data);
 
-    res.status(200).json({ data });
+    res.status(200).json({ answer });
 
   } catch (error) {
-    res.status(500).json({
-      error: "Server error",
-      details: error.message
-    });
+    res.status(500).json({ error: "Server error", details: error.message });
   }
-              }
+}
