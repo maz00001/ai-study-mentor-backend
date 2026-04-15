@@ -23,12 +23,13 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
+console.log("FULL GEMINI RESPONSE:", JSON.stringify(data, null, 2));
 
     const answer =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "AI could not generate a response.";
 
-    res.status(200).json({ answer });
+    res.status(200).json({ data });
 
   } catch (error) {
     res.status(500).json({
