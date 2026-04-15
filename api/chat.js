@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     const { question } = req.body || { question: "Explain Artificial Intelligence simply." };
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: {
@@ -21,8 +21,7 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // 🔍 Debug (important)
-    console.log(data);
+    console.log(data); // debug
 
     const answer =
       data?.candidates?.[0]?.content?.parts?.[0]?.text ||
